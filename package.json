@@ -1,0 +1,27 @@
+{
+  "name": "com.bassboostseb.flowsys",
+  "version": "1.0.0",
+  "displayName": "FlowSys",
+  "description": "A visual scripting tool for building mission logic flows in Unity. Define steps, actions, and conditions as ScriptableObjects and connect them in a node-based graph editor.",
+  "unity": "2021.3",
+  "unityRelease": "0f1",
+  "documentationUrl": "",
+  "changelogUrl": "",
+  "licensesUrl": "",
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.6",
+    "com.unity.localization": "1.4.4"
+  },
+  "keywords": [
+    "mission",
+    "flow",
+    "visual scripting",
+    "graph",
+    "state machine"
+  ],
+  "author": {
+    "name": "BassBoostSeb",
+    "email": "",
+    "url": ""
+  }
+}

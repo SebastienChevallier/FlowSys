@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/schev/Documents/GitHub/FlowSys -name *.asmdef -o -name package.json)",
+      "Bash(git mv:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
