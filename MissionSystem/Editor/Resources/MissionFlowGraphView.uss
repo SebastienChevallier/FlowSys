@@ -1,0 +1,151 @@
+#UXML
+{
+    --graph-bg-color: rgb(40, 40, 40);
+    --node-bg-color: rgb(60, 60, 60);
+    --node-border-color: rgb(30, 30, 30);
+    --text-color: rgb(200, 200, 200);
+    --label-color: rgb(150, 200, 255);
+    --section-color: rgb(100, 150, 200);
+}
+
+GridBackground
+{
+    --grid-background-color: rgb(30, 30, 30);
+    --line-color: rgba(255, 255, 255, 0.05);
+    --thick-line-color: rgba(255, 255, 255, 0.1);
+    --spacing: 15;
+}
+
+.mission-step-node
+{
+    background-color: rgb(60, 60, 60);
+    border-color: rgb(100, 150, 200);
+    border-width: 2;
+    border-radius: 10;
+    min-width: 200;
+    overflow: hidden;
+}
+
+.mission-step-node:selected
+{
+    background-color: rgb(80, 100, 150);
+    border-color: rgb(150, 200, 255);
+    border-width: 3;
+}
+
+.mission-step-node #title
+{
+    background-color: rgb(50, 50, 50);
+    border-bottom-width: 1;
+    border-bottom-color: rgb(80, 80, 80);
+    border-top-left-radius: 10;
+    border-top-right-radius: 10;
+    padding: 3;
+    font-size: 12;
+    -unity-font-style: bold;
+}
+
+.mission-step-node .main-container,
+.mission-step-node .top,
+.mission-step-node .extension-container
+{
+    border-radius: 10;
+    overflow: hidden;
+}
+
+.mission-step-node .node-title
+{
+    color: rgb(200, 200, 200);
+    font-size: 11;
+    -unity-font-style: bold;
+    padding: 2;
+}
+
+.mission-step-node .section-label
+{
+    color: rgb(150, 200, 255);
+    font-size: 9;
+    -unity-font-style: bold;
+    margin-top: 3;
+    margin-bottom: 2;
+}
+
+.mission-step-node .section-content
+{
+    color: rgb(180, 180, 180);
+    font-size: 8;
+    white-space: normal;
+    margin-left: 10;
+}
+
+.port
+{
+    width: 14;
+    height: 14;
+}
+
+.port.input
+{
+    align-items: flex-start;
+}
+
+.port.output
+{
+    align-items: flex-end;
+}
+
+.mission-step-input-port
+{
+    margin-left: -8;
+    min-height: 18;
+}
+
+.mission-step-input-port .connector
+{
+    width: 14;
+    height: 14;
+    border-radius: 7;
+    border-top-width: 2;
+    border-right-width: 2;
+    border-bottom-width: 2;
+    border-left-width: 2;
+    border-top-color: rgb(210, 210, 210);
+    border-right-color: rgb(210, 210, 210);
+    border-bottom-color: rgb(210, 210, 210);
+    border-left-color: rgb(210, 210, 210);
+    background-color: rgb(55, 55, 55);
+}
+
+.mission-condition-output-port
+{
+    margin-right: -10;
+    min-height: 18;
+}
+
+.mission-condition-output-port .connector
+{
+    width: 14;
+    height: 14;
+    border-radius: 7;
+    border-top-width: 2;
+    border-right-width: 2;
+    border-bottom-width: 2;
+    border-left-width: 2;
+    border-top-color: rgb(220, 220, 220);
+    border-right-color: rgb(220, 220, 220);
+    border-bottom-color: rgb(220, 220, 220);
+    border-left-color: rgb(220, 220, 220);
+    background-color: rgb(120, 120, 120);
+}
+
+Edge
+{
+    --edge-color: rgb(150, 150, 150);
+    --edge-width: 2;
+}
+
+Edge:selected
+{
+    --edge-color: rgb(255, 255, 100);
+    --edge-width: 3;
+}

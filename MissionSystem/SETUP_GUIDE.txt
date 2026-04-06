@@ -1,0 +1,164 @@
+═══════════════════════════════════════════════════════════════════════════════
+GUIDE DE SETUP - MISSION SYSTEM
+═══════════════════════════════════════════════════════════════════════════════
+
+Le système de missions a été adapté pour utiliser les singletons existants dans 
+votre MainScene au lieu de créer de nouvelles instances.
+
+═══════════════════════════════════════════════════════════════════════════════
+COMPOSANTS EXISTANTS UTILISÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ VoixOffManager (GameObject: "VoiceOverManager" dans MainScene)
+   - Singleton existant pour la lecture des voix off
+   - Gère automatiquement le multilingue via VoiceOverSyncConfig
+   - Utilisé par MissionManager.PlayVoiceOverByKey()
+
+✅ AudioManager (GameObject: "VoiceOverManager" dans MainScene)
+   - Singleton existant pour la lecture audio générale
+   - Utilisé pour le support legacy (AudioClip direct)
+   - Gère les AudioSource (music, sfx, sound)
+
+✅ ScenesManager (Singleton Evaveo.EvaveoToolbox)
+   - Utilisé par MissionSceneLoader pour charger les scènes
+   - Gère l'écran de chargement automatiquement
+
+✅ UserActionsManager (Singleton VORTA)
+   - Utilisé pour activer/désactiver les actions utilisateur
+   - Appelé statiquement via UserActionsManager.SetActionCanDo()
+
+═══════════════════════════════════════════════════════════════════════════════
+SETUP DANS UNITY
+═══════════════════════════════════════════════════════════════════════════════
+
+1. CRÉER LE MISSIONMANAGER DANS LA MAINSCENE
+   ────────────────────────────────────────────────────────────────────────────
+   a) Créer un GameObject vide: "MissionManager"
+   b) Ajouter le composant: MissionManager.cs
+   c) Configurer les références:
+
+      [Services (Dependency Injection)]
+      ├─ Scene Loader: Créer un enfant "SceneLoader" avec MissionSceneLoader.cs
+      ├─ Player Teleporter: Créer un enfant "PlayerTeleporter" avec VortaPlayerTeleporter.cs
+      └─ Object Registry: Créer un enfant "ObjectRegistry" avec MissionObjectRegistry.cs
+
+2. CONFIGURER MISSIONSCENELOADER
+   ────────────────────────────────────────────────────────────────────────────
+   Sur le GameObject "SceneLoader":
+   
+   [Loading UI (Optional)]
+   ├─ Loading Fill Image: (optionnel - laissez vide pour utiliser l'UI par défaut)
+   ├─ Loading Canvas Group: (optionnel)
+   └─ Mission Image Loading: (optionnel)
+
+   NOTE: Si vous laissez ces champs vides, ScenesManager utilisera son UI 
+         par défaut pour l'écran de chargement.
+
+3. CONFIGURER VORTAPLAYERTELEPORTER
+   ────────────────────────────────────────────────────────────────────────────
+   Sur le GameObject "PlayerTeleporter":
+   
+   [Player Rig]
+   └─ Player Rig: Référence au GameObject du joueur (XR Origin, PlayerRig, etc.)
+
+   NOTE: Le script cherche automatiquement "PlayerRig", "XR Origin" ou "XRRig"
+         si le champ est vide.
+
+4. CONFIGURER MISSIONOBJECTREGISTRY
+   ────────────────────────────────────────────────────────────────────────────
+   Sur le GameObject "ObjectRegistry":
+   
+   Aucune configuration nécessaire. Les objets s'enregistrent automatiquement
+   via le composant MissionObjectRegistrar.
+
+═══════════════════════════════════════════════════════════════════════════════
+HIÉRARCHIE RECOMMANDÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+MainScene
+├─ VoiceOverManager (existant - NE PAS TOUCHER)
+│  ├─ AudioSource_Music
+│  ├─ AudioSource_SFX
+│  └─ AudioSource_Sound
+│
+├─ MissionManager (NOUVEAU)
+│  ├─ SceneLoader (MissionSceneLoader)
+│  ├─ PlayerTeleporter (VortaPlayerTeleporter)
+│  └─ ObjectRegistry (MissionObjectRegistry)
+│
+└─ [Reste de la scène...]
+
+═══════════════════════════════════════════════════════════════════════════════
+FLUX D'UTILISATION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. VoixOffManager est déjà présent dans MainScene ✅
+2. AudioManager est déjà présent dans MainScene ✅
+3. MissionManager utilise ces singletons automatiquement ✅
+4. Pas besoin de créer MissionAudioPlayer ✅
+5. Les voix off sont jouées via VoixOffManager.PlayVoixOffImmediate() ✅
+
+═══════════════════════════════════════════════════════════════════════════════
+AVANTAGES DE CETTE APPROCHE
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Réutilise l'infrastructure existante (VoixOffManager, AudioManager)
+✅ Pas de duplication de code ou de composants
+✅ Gestion centralisée des voix off avec support multilingue
+✅ Intégration transparente avec le système VORTA existant
+✅ Moins de références à configurer manuellement
+✅ Utilise les singletons déjà testés et fonctionnels
+
+═══════════════════════════════════════════════════════════════════════════════
+DÉMARRER UNE MISSION
+═══════════════════════════════════════════════════════════════════════════════
+
+Depuis n'importe quel script:
+
+    MissionConfigSO mission = // Votre mission SO
+    MissionManager.Instance.StartMission(mission);
+
+Ou via un bouton UI:
+
+    public class MissionMenuButton : MonoBehaviour
+    {
+        public MissionConfigSO mission;
+        
+        public void OnClick()
+        {
+            MissionManager.Instance.StartMission(mission);
+        }
+    }
+
+═══════════════════════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ "VoixOffManager instance is null"
+   → Vérifiez que le GameObject "VoiceOverManager" existe dans MainScene
+   → Vérifiez que le composant VoixOffManager est activé
+
+❌ "AudioManager instance is null"
+   → Vérifiez que le composant AudioManager est sur "VoiceOverManager"
+   → Vérifiez que le GameObject est activé
+
+❌ "Cannot teleport: playerRig is null"
+   → Assignez manuellement le Transform du joueur dans VortaPlayerTeleporter
+   → Ou renommez votre joueur en "PlayerRig", "XR Origin" ou "XRRig"
+
+❌ "Scenes not found in build settings"
+   → Ajoutez vos scènes de mission dans File > Build Settings
+   → Vérifiez que les noms correspondent exactement
+
+═══════════════════════════════════════════════════════════════════════════════
+PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Créer vos MissionConfigSO dans Assets/GAME/Missions/
+2. Créer vos MissionStepConfigSO pour chaque étape
+3. Créer vos Actions (ShowObject, PlayVoiceOver, etc.)
+4. Créer vos Conditions (UserActionDone, ObjectPicked, etc.)
+5. Ajouter MissionObjectRegistrar sur les objets interactifs
+6. Tester en Play Mode avec le bouton "Test Mission" dans l'Inspector
+
+═══════════════════════════════════════════════════════════════════════════════
